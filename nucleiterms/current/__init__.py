@@ -1,1 +1,1 @@
-from .current import *
+from . import bifold

@@ -1,1 +1,1 @@
-from .bifold.simpson.simpson import *
+from .current import bifold
