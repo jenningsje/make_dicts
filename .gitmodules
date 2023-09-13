@@ -1,0 +1,3 @@
+[submodule "BiFold"]
+	path = BiFold
+	url = https://github.com/mkarakoc/BiFold
