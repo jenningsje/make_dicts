@@ -19,7 +19,7 @@
 This module contains the interactions.
 """
 
-from .functions import *
+from functions import *
 from numpy import polyval, array
 
 @volumes
