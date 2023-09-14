@@ -136,7 +136,7 @@ for i in range(m):
     Zeff_dict[atomic_radii["symbol"].iloc[i]] = all_Zeffs_dict[atomic_radii["symbol"].iloc[i]][-1][-1]
 
 r = mesh(500000, 1000000, 5000)
-q = mesh(500000, 1000000, 5000)
+q = mesh(500000, 300000, 5000)
 
 e_lab = 0 # collission energy which is zero
 V_nuc = np.empty(shape=(m, m), dtype='object')
@@ -160,7 +160,7 @@ for i in range(m):
             
         V_nuc_dict[atomic_radii["symbol"].iloc[i] + atomic_radii["symbol"].iloc[j]] = V_nuc[i][j]
         
-V_nuc_df = pd.DataFrame(V_nuc_dict)
+print(V_nuc_dict)
         
 orbital_to_n = {}
 orbital_to_l = {}
