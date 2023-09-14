@@ -140,8 +140,8 @@ q = mesh(500000, 300000, 5000)
 
 e_lab = 141.7 # collission energy which is zero
 V_nuc = np.empty(shape=(m, m), dtype='object')
-V_nuc_df = pd.DataFrame({'atom pair': [], 'energy': [], 'distance': []})
 V_nuc_dict = {}
+V_nuc_df = pd.DataFrame({'atom pair': [], 'energy': [], 'min dist': [], 'max dist': []})
 
 # create nucle-nuclei energy dictionary
 for i in range(m):
@@ -159,12 +159,13 @@ for i in range(m):
         else:
             V_nuc[i][j] = 0
             
-        V_nuc[i][j] = [atomic_radii["symbol"].iloc[i] + atomic_radii["symbol"].iloc[j]]
         V_nuc_dict[atomic_radii["symbol"].iloc[i] + atomic_radii["symbol"].iloc[j]] = V_nuc[i][j]
-        
+        atom_pair = atomic_radii["symbol"].iloc[i] + atomic_radii["symbol"].iloc[j]
+        energy = V_nuc_dict[atom_pair]['func_r']['exchange']['vnn'][0]
+        V_nuc_df1 = pd.DataFrame({'atom pair': atom_pair, 'energy': energy, 'min dist': 5.0, 'max dist': 5.05})
+        V_nuc_df.append(V_nuc_df1)
 
 print(V_nuc_dict['CN']['func_r']['exchange']['vnn'][0])
-
         
 orbital_to_n = {}
 orbital_to_l = {}
