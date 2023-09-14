@@ -1,0 +1,2 @@
+# make_dicts
+Use this only once to create the dataframes tha you need for the python code. The dataframes contation the nuclei-nuclei energies per distance from each other within the bounds of the solvent interactions per atom-atom pair. This means that there is a atom-atom pair column, a distance column and an energy column. The dictionary also contains the electron-electron interactions energies corresponding to each atom. This is the quantization of both the electrostatic and solvent energies and applies to both of them.
