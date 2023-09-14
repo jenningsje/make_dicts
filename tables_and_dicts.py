@@ -140,6 +140,7 @@ q = mesh(500000, 300000, 5000)
 
 e_lab = 141.7 # collission energy which is zero
 V_nuc = np.empty(shape=(m, m), dtype='object')
+V_nuc_df = pd.DataFrame({'atom pair': [], 'energy': [], 'distance': []})
 V_nuc_dict = {}
 
 # create nucle-nuclei energy dictionary
@@ -158,9 +159,11 @@ for i in range(m):
         else:
             V_nuc[i][j] = 0
             
+        V_nuc[i][j] = [atomic_radii["symbol"].iloc[i] + atomic_radii["symbol"].iloc[j]]
         V_nuc_dict[atomic_radii["symbol"].iloc[i] + atomic_radii["symbol"].iloc[j]] = V_nuc[i][j]
+        
 
-print(V_nuc_dict['CN']['func_r']['exchange']['vnn'])
+print(V_nuc_dict['CN']['func_r']['exchange']['vnn'][0])
 
         
 orbital_to_n = {}
@@ -192,4 +195,3 @@ elements = list(element_to_quantum_numbers.keys())
 quantum_numbers_bad = list(element_to_quantum_numbers.values())
 quantum_numbers = [item for item in quantum_numbers_bad if not (item == {'n': 'Unknown', 'l': 'Unknown'})]
 vector = np.vectorize(np.int_)
-
