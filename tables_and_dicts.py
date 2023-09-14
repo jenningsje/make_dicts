@@ -145,13 +145,20 @@ V_nuc_df = pd.DataFrame({'atom pair': [], 'energy': [], 'min dist': [], 'max dis
 
 # create nucle-nuclei energy dictionary
 for i in range(m):
+    # retrieve data from nuclei-nuclei repulsion for nuclei i
     Zeff_i = Zeff_dict[atomic_radii["symbol"].iloc[i]]
     radius_i = atomic_radii["atomic radius"].iloc[i]
     a_proj = atomic_radii["atomic number"].iloc[i]
+    atom_i = atomic_radii["symbol"].iloc[i]
+
     for j in range(m):
+        # retreive data for nuclei-nuclei repulsion for nuclei j
         Zeff_j = Zeff_dict[atomic_radii["symbol"].iloc[j]]
         radius_j = atomic_radii["atomic radius"].iloc[j]
         min_dist = radius_i + radius_j
+        atom_j = atomic_radii["symbol"].iloc[j]
+
+        # obtain nuclei-nuclei repulsion energy for the yukawa potential
         if Zeff_i != 0 and Zeff_j != 0:
             rho_p = f_2prm_gaussian(r, ke * (Zeff_i ** 2) / min_dist, 1)
             rho_t = f_2prm_gaussian(r, ke * (Zeff_j ** 2) / min_dist, 1)
@@ -159,14 +166,17 @@ for i in range(m):
         else:
             V_nuc[i][j] = 0
             
+        # create dictionary containing databases corresponding to each nuclei-nuclei pair
         V_nuc_dict[atomic_radii["symbol"].iloc[i] + atomic_radii["symbol"].iloc[j]] = V_nuc[i][j]
-        atom_pair = atomic_radii["symbol"].iloc[i] + atomic_radii["symbol"].iloc[j]
-        energy = V_nuc_dict[atom_pair]['func_r']['exchange']['vnn'][0]
-        V_nuc_df1 = pd.DataFrame({'atom pair': atom_pair, 'energy': energy, 'min dist': 5.0, 'max dist': 5.05})
-        V_nuc_df.append(V_nuc_df1)
+        # obtain the repulsion energy
 
+print(atomic_radii["symbol"].iloc[5])
+print(atomic_radii["symbol"].iloc[6])
 print(V_nuc_dict['CN']['func_r']['exchange']['vnn'][0])
-        
+atom_pair = atomic_radii["symbol"].iloc[5] + atomic_radii["symbol"].iloc[6]
+print(atom_pair)
+print(V_nuc_dict[atom_pair]['func_r']['exchange']['vnn'][0])
+
 orbital_to_n = {}
 orbital_to_l = {}
 
@@ -188,7 +198,6 @@ for i in range(len(periodic_array)):
         if element != 'X':
             orbital = orbital_array[i][j]
             n = orbital_to_n.get(orbital, 'Unknown')
-            print(n)
             l = orbital_to_l.get(orbital, 'Unknown')
             element_to_quantum_numbers[element] = {'n': n, 'l': l}
 
