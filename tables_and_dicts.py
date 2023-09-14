@@ -188,18 +188,5 @@ for i in range(0, 10):
     for j in range(0, 18):
         element_to_orbital[periodic_array[i][j]] = orbital_array[i][j]
 
-element_to_quantum_numbers = {}
-
-print(periodic_array)
-
-for i in range(len(periodic_array)):
-    for j in range(len(periodic_array[i])):
-        element = periodic_array[i][j]
-        if element != 'X':
-            orbital = orbital_array[i][j]
-            n = orbital_to_n.get(orbital, 'Unknown')
-            print(n)
-            l = orbital_to_l.get(orbital, 'Unknown')
-            element_to_quantum_numbers[element] = {'n': n, 'l': l}
-
-print(element_to_quantum_numbers)
+for atom in atom_dict:
+    print(atom_dict[atom])
