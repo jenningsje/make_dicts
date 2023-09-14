@@ -48,6 +48,7 @@ aa_filter_b = {b'ALA', b'ARG', b'ASN', b'ASP', b'CYS', b'GLU', b'GLN', b'GLY', b
 aa_dict_b = {b'ALA': 0, b'ARG': 1, b'ASN': 2, b'ASP': 3, b'CYS': 4, b'GLU': 5, b'GLN': 6, b'GLY': 7, b'HIS': 8, b'ILE': 9, b'LEU': 10, b'LYS': 11, b'MET': 12, b'PHE': 13, b'PRO': 14, b'SER': 15, b'THR': 16, b'TRP': 17, b'TYR': 18, b'VAL': 19, b'NAG': 20, b'HOH': 21}
 atom_filter = {'C', 'N', 'O', 'ZN'}
 aa_dict = {"ALA": 1, "Arg": 2, "ASN": 3, "ASP": 4, "CYS": 5, "GLU": 6, "GLN": 7, "GLY": 8, "HIS": 9, "LIE": 10, "LEU": 11, "LYS": 12, "MET": 13, "PHE": 14, "PRO": 15, "SER": 16, "THR": 17, "TRP": 18, "TYR": 19, "VAL": 20}
+atom_list = atomic_radii['symbol'].tolist()
 
 # coloumb constant
 ke = 8.9875517873681764 * 10 ** 9
@@ -149,14 +150,14 @@ for i in range(m):
     Zeff_i = Zeff_dict[atomic_radii["symbol"].iloc[i]]
     radius_i = atomic_radii["atomic radius"].iloc[i]
     a_proj = atomic_radii["atomic number"].iloc[i]
-    atom_i = atomic_radii["symbol"].iloc[i]
+    atom1 = atomic_radii["symbol"]
 
     for j in range(m):
         # retreive data for nuclei-nuclei repulsion for nuclei j
         Zeff_j = Zeff_dict[atomic_radii["symbol"].iloc[j]]
         radius_j = atomic_radii["atomic radius"].iloc[j]
         min_dist = radius_i + radius_j
-        atom_j = atomic_radii["symbol"].iloc[j]
+        atom2 = atomic_radii["symbol"]
 
         # obtain nuclei-nuclei repulsion energy for the yukawa potential
         if Zeff_i != 0 and Zeff_j != 0:
@@ -165,17 +166,11 @@ for i in range(m):
             V_nuc[i][j] = u_m3y_reid_zr(e_lab, a_proj, rho_p, rho_t, r, q)
         else:
             V_nuc[i][j] = 0
-            
+
         # create dictionary containing databases corresponding to each nuclei-nuclei pair
         V_nuc_dict[atomic_radii["symbol"].iloc[i] + atomic_radii["symbol"].iloc[j]] = V_nuc[i][j]
         # obtain the repulsion energy
-
-print(atomic_radii["symbol"].iloc[5])
-print(atomic_radii["symbol"].iloc[6])
-print(V_nuc_dict['CN']['func_r']['exchange']['vnn'][0])
-atom_pair = atomic_radii["symbol"].iloc[5] + atomic_radii["symbol"].iloc[6]
-print(atom_pair)
-print(V_nuc_dict[atom_pair]['func_r']['exchange']['vnn'][0])
+        V_nuc_df = pd.DataFrame({'atom_pair': [atom1 + atom2], 'energy': [100], 'min_dist': [10], 'max_dist': [10]})
 
 orbital_to_n = {}
 orbital_to_l = {}
