@@ -5,11 +5,7 @@ from RadialPsi import *
 import sys
 from zeff import *
 from nucleiterms.current.bifold.matematik import mesh
-from nucleiterms.current.bifold.filon import filon
-from nucleiterms.current.bifold import functions
-
-sys.path.insert(0, '/Users/james/Desktop/file_cabinet/work/bioinformatics/github/make_dfs')
-print(sys.path)
+from nucleiterms.current.bifold.simpson.simpson import *
 
 # import text files
 
