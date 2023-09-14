@@ -138,7 +138,7 @@ for i in range(m):
 r = mesh(500000, 1000000, 5000)
 q = mesh(500000, 300000, 5000)
 
-e_lab = 0 # collission energy which is zero
+e_lab = 141.7 # collission energy which is zero
 V_nuc = np.empty(shape=(m, m), dtype='object')
 V_nuc_dict = {}
 
