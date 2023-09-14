@@ -40,6 +40,7 @@ orbital_file.close()
 atomic_radii = pd.read_excel("./make-tables/excel/radii.xlsx")
 atomic_numbers = pd.read_excel("./make-tables/excel/atomic_numbers.xlsx")
 energies = pd.read_excel("./make-tables/excel/energies.xlsx")
+atom_list = pd.read_excel("./make-tables/excel/atom_list.xlsx")
 
 # create dictionaries
 
@@ -169,8 +170,9 @@ for i in range(m):
 
         # create dictionary containing databases corresponding to each nuclei-nuclei pair
         V_nuc_dict[atomic_radii["symbol"].iloc[i] + atomic_radii["symbol"].iloc[j]] = V_nuc[i][j]
-        # obtain the repulsion energy
-        V_nuc_df = pd.DataFrame({'atom_pair': [atom1 + atom2], 'energy': [100], 'min_dist': [10], 'max_dist': [10]})
+
+df = pd.DataFrame(V_nuc_dict)
+df.to_csv('V_nuc_dict.csv')
 
 orbital_to_n = {}
 orbital_to_l = {}
@@ -187,16 +189,17 @@ for i in range(0, 10):
 
 element_to_quantum_numbers = {}
 
+print(periodic_array)
+
 for i in range(len(periodic_array)):
     for j in range(len(periodic_array[i])):
         element = periodic_array[i][j]
         if element != 'X':
             orbital = orbital_array[i][j]
             n = orbital_to_n.get(orbital, 'Unknown')
+            print(n)
             l = orbital_to_l.get(orbital, 'Unknown')
             element_to_quantum_numbers[element] = {'n': n, 'l': l}
 
-elements = list(element_to_quantum_numbers.keys())
-quantum_numbers_bad = list(element_to_quantum_numbers.values())
-quantum_numbers = [item for item in quantum_numbers_bad if not (item == {'n': 'Unknown', 'l': 'Unknown'})]
-vector = np.vectorize(np.int_)
+for i in range(0, 118):
+    print(atom_list[i])
