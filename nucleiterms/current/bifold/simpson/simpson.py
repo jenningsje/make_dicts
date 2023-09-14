@@ -80,8 +80,13 @@ def vol_msr(R, u_R):
     R4 = R2 * R2
     u_R_vol2 = pi4 * simpson( u_R * R2, R)
     u_R_vol4 = pi4 * simpson( u_R * R4, R)
-    u_R_msr  = u_R_vol4 / u_R_vol2
-    return u_R_vol2, u_R_vol4, u_R_msr
+
+    if u_R_vol2 != 0:
+        u_R_msr  = u_R_vol4 / u_R_vol2
+        return u_R_vol2, u_R_vol4, u_R_msr
+    else:
+        u_R_msr = 10 * (10 * 50)
+        return u_R_vol2, u_R_vol4, u_R_msr
 
 #..........................................................................#
 #******** Density Dependent M3Y - Reid/Paris [B/C/D-DM3Y: Xdm3yn] *********#
