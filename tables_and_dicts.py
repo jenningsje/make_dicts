@@ -159,8 +159,9 @@ for i in range(m):
             V_nuc[i][j] = 0
             
         V_nuc_dict[atomic_radii["symbol"].iloc[i] + atomic_radii["symbol"].iloc[j]] = V_nuc[i][j]
-        
-print(V_nuc_dict)
+
+print(V_nuc_dict['CN']['func_r']['exchange']['vnn'])
+
         
 orbital_to_n = {}
 orbital_to_l = {}
