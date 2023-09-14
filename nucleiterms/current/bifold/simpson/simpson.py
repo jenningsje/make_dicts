@@ -688,7 +688,12 @@ def u_bifold_zr(rho_p, rho_t, vnn_d, vnn_ex, r, q, R=None, s=None):
     u_q = u_d_dict['func_q']['u_R'] + u_ex_zr_dict['func_q']['u_R']
     u_R_vol2 = u_d_dict['func_i']['u_R'][0]['vol2'] + u_ex_zr_dict['func_i']['u_R'][0]['vol2']
     u_R_vol4 = u_d_dict['func_i']['u_R'][0]['vol4'] + u_ex_zr_dict['func_i']['u_R'][0]['vol4']
-    u_R_msr = u_R_vol4/u_R_vol2
+
+    if u_R_vol2 != 0:
+        u_R_msr = u_R_vol4/u_R_vol2
+    else:
+        u_R_msr = 10 * (10 ** 50)
+
     u_R_info = {'name':'u_bifold_zr', 'L':0, 'norm': None, 'renorm':1.0,
                 'vol2':u_R_vol2, 'vol4':u_R_vol4, 'msr':u_R_msr}
     return {'func_i': {'total': {'u_R': [u_R_info]}, 'direct': u_d_dict['func_i'], 'exchange': u_ex_zr_dict['func_i']},
