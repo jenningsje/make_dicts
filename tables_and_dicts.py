@@ -4,7 +4,8 @@ from RadialPsi import *
 from zeff import *
 from nucleiterms.current.bifold.matematik import mesh
 from nucleiterms.current.bifold.simpson.simpson import *
-import json
+from scipy import integrate
+from scipy.special import genlaguerre
 
 # import text files
 
@@ -168,11 +169,6 @@ for i in range(m):
         # create dictionary containing databases corresponding to each nuclei-nuclei pair
         V_nuc_dict[atomic_radii["symbol"].iloc[i] + atomic_radii["symbol"].iloc[j]] = V_nuc
 
-output_file_path = "V_nuc_dict.pkl"
-
-with open(output_file_path, 'wb') as output:
-    json.dump(V_nuc_dict, output)
-
 orbital_to_n = {}
 orbital_to_l = {}
 
@@ -180,14 +176,23 @@ for index3, row3 in energies.iterrows():
     orbital_to_n[row3["Orbitals"]] = row3["n"]
     orbital_to_l[row3["Orbitals"]] = row3["l"]
 
-element_to_orbital = {}
+def V_elec(r, n_num, l_num):
+    return (1 / 3) * (r ** 2) * R(n_num, l_num, r)
 
-for i in range(0, 10):
-    for j in range(0, 18):
-        element_to_orbital[periodic_array[i][j]] = orbital_array[i][j]
+# Initialize lists to store results and errors
+results = []
+errors = []
 
+# Loop over each atom for integration
 for atom in atom_dict:
     print(str(atom_dict[atom]) + " " + str(atom) + " " + str(atom_dict[atom]['n']))
     n_num = atom_dict[atom]['n']
     l_num = atom_dict[atom]['l']
-    R1 = R(n_num, l_num, 5.0)
+
+    # Perform the numerical integration for each atom
+    result, error = integrate.quad(V_elec, 0, 1e10, args=(n_num, l_num))
+    results.append(result)
+    errors.append(error)
+
+# Now you have results and errors for each atom's integration
+# You can use the results and errors as needed in your code.
