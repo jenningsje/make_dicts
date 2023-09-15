@@ -1,10 +1,10 @@
 import pandas as pd
 import numpy as np
 from RadialPsi import *
-import sys
 from zeff import *
 from nucleiterms.current.bifold.matematik import mesh
 from nucleiterms.current.bifold.simpson.simpson import *
+import json
 
 # import text files
 
@@ -39,7 +39,6 @@ orbital_file.close()
 atomic_radii = pd.read_excel("./make-tables/excel/radii.xlsx")
 atomic_numbers = pd.read_excel("./make-tables/excel/atomic_numbers.xlsx")
 energies = pd.read_excel("./make-tables/excel/energies.xlsx")
-atom_list = pd.read_excel("./make-tables/excel/atom_list.xlsx")
 
 # create dictionaries
 
@@ -133,11 +132,14 @@ for i in range(n):
             prob = aa_table[i][j]*E[i][j]
             A[i].append(prob)
 
+for i in range(m):
+    all_Zeffs_dict[atomic_radii["symbol"].iloc[i]] = slater(atomic_radii["symbol"].iloc[i])
+    Zeff_dict[atomic_radii["symbol"].iloc[i]] = all_Zeffs_dict[atomic_radii["symbol"].iloc[i]][-1][-1]
+
 r = mesh(500000, 1000000, 5000)
 q = mesh(500000, 300000, 5000)
 
 e_lab = 141.7 # collission energy which is zero
-V_nuc = np.empty(shape=(m, m), dtype='object')
 V_nuc_dict = {}
 V_nuc_df = pd.DataFrame({'atom pair': [], 'energy': [], 'min dist': [], 'max dist': []})
 
@@ -148,7 +150,6 @@ for i in range(m):
     radius_i = atomic_radii["atomic radius"].iloc[i]
     a_proj = atomic_radii["atomic number"].iloc[i]
     atom1 = atomic_radii["symbol"]
-
     for j in range(m):
         # retreive data for nuclei-nuclei repulsion for nuclei j
         Zeff_j = Zeff_dict[atomic_radii["symbol"].iloc[j]]
@@ -160,15 +161,17 @@ for i in range(m):
         if Zeff_i != 0 and Zeff_j != 0:
             rho_p = f_2prm_gaussian(r, ke * (Zeff_i ** 2) / min_dist, 1)
             rho_t = f_2prm_gaussian(r, ke * (Zeff_j ** 2) / min_dist, 1)
-            V_nuc[i][j] = u_m3y_reid_zr(e_lab, a_proj, rho_p, rho_t, r, q)
+            V_nuc = u_m3y_reid_zr(e_lab, a_proj, rho_p, rho_t, r, q)
         else:
-            V_nuc[i][j] = 0
+            V_nuc = 0
 
         # create dictionary containing databases corresponding to each nuclei-nuclei pair
-        V_nuc_dict[atomic_radii["symbol"].iloc[i] + atomic_radii["symbol"].iloc[j]] = V_nuc[i][j]
+        V_nuc_dict[atomic_radii["symbol"].iloc[i] + atomic_radii["symbol"].iloc[j]] = V_nuc
 
-df = pd.DataFrame(V_nuc_dict)
-df.to_csv('V_nuc_dict.csv')
+output_file_path = "V_nuc_dict.pkl"
+
+with open(output_file_path, 'wb') as output:
+    json.dump(V_nuc_dict, output)
 
 orbital_to_n = {}
 orbital_to_l = {}
