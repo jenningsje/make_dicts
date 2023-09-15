@@ -1,4 +1,3 @@
-import sys
 import pandas as pd
 import numpy as np
 from RadialPsi import *
@@ -134,10 +133,6 @@ for i in range(n):
             prob = aa_table[i][j]*E[i][j]
             A[i].append(prob)
 
-for i in range(m):
-    all_Zeffs_dict[atomic_radii["symbol"].iloc[i]] = slater(atomic_radii["symbol"].iloc[i])
-    Zeff_dict[atomic_radii["symbol"].iloc[i]] = all_Zeffs_dict[atomic_radii["symbol"].iloc[i]][-1][-1]
-
 r = mesh(500000, 1000000, 5000)
 q = mesh(500000, 300000, 5000)
 
@@ -189,4 +184,7 @@ for i in range(0, 10):
         element_to_orbital[periodic_array[i][j]] = orbital_array[i][j]
 
 for atom in atom_dict:
-    print(atom_dict[atom])
+    print(str(atom_dict[atom]) + " " + str(atom) + " " + str(atom_dict[atom]['n']))
+    n_num = atom_dict[atom]['n']
+    l_num = atom_dict[atom]['l']
+    R1 = R(n_num, l_num, 5.0)
