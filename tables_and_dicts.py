@@ -185,11 +185,17 @@ def V_elec(n_num, l_num):
 K_con = (h_bar / (2 * 9.1093837 * (10 ** -31))/ e_mass) 
 
 def K_elec(n_num, l_num):
-    result = integrate.quad(lambda r: derivative(derivative(R(_num, l_num, r), r, dr=0.001), r, dr=0.001))
+    result = integrate.quad(lambda r: derivative(derivative(R(n_num, l_num, r), r, dx=0.001), r, dx=0.001), 0, 1000)
 
 # Initialize lists to store results and errors
 V_elec_sqrd_dict = {}
 K_elec_dict = {}
+
+# Define the K_elec_integrand function
+def K_elec_integrand(r, n_num1, l_num1, n_num2, l_num2):
+    return (4 / (3 * .529 ** 3)) * (r ** 2) * R(n_num1, l_num1, r) * R(n_num2, l_num2, r)
+
+# Rest of your code...
 
 # Loop over each atom for integration
 for atom1 in atom_dict:
@@ -201,5 +207,16 @@ for atom1 in atom_dict:
         l_num2 = atom_dict[atom2]['l']
         V_elec2 = V_elec(n_num2, l_num2)[1] 
         V_elec_sqrd_dict[atom1 + atom2] = V_elec1 * V_elec2
-        K_elec = K_elec(n_num1, l_num1) + K_elec(n_num2, l_num2)
+
+        # Calculate the K_elec values using the predefined K_elec_integrand function
+        K_elec = integrate.quad(K_elec_integrand, 0, 1000, args=(n_num1, l_num1, n_num2, l_num2))[0]
         K_elec_dict[atom1 + atom2] = K_elec
+
+# Print V_elec_sqrd_dict and K_elec_dict
+print(V_elec_sqrd_dict)
+print(K_elec_dict)
+
+
+
+
+
