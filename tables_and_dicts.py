@@ -53,7 +53,7 @@ atom_list = atomic_radii['symbol'].tolist()
 
 # coloumb constant
 ke = 8.9875517873681764 * 10 ** 9
-e = 1.60217663 * 10 * -19
+e_elec = 1.60217663 * 10 * -19
 A = []
 E = []
 Nuclei_V_dict = {}
@@ -178,7 +178,7 @@ for index3, row3 in energies.iterrows():
 
 def V_elec(n_num, l_num):
     (1 / 3) * (r ** 2) * R(n_num, l_num, r)
-    result = integrate.quad(lambda r: (1 / 3) * (r ** 2) * R(n_num, l_num, r) ** 2, 0, 1000)
+    result = integrate.quad(lambda r: (4 / (3 * .529 ** 3)) * (r ** 2) * R(n_num, l_num, r) ** 2, 0, 1000)
     return result
 
 # Initialize lists to store results and errors
@@ -190,4 +190,5 @@ for atom in atom_dict:
     print(str(atom_dict[atom]) + " " + str(atom) + " " + str(atom_dict[atom]['n']))
     n_num = atom_dict[atom]['n']
     l_num = atom_dict[atom]['l']
-    print(V_elec(n_num, l_num))
+    print(type(V_elec(n_num, l_num)))
+    print(V_elec(n_num, l_num[1]))
