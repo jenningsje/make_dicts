@@ -4,7 +4,7 @@ from scipy.special import genlaguerre
 from scipy.integrate import simps
 from scipy.misc import derivative
 
-a = 5.29*10**-11
+a = .529
 numValues = 20000
 
 def R(n, l, r):

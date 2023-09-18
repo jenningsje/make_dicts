@@ -176,8 +176,10 @@ for index3, row3 in energies.iterrows():
     orbital_to_n[row3["Orbitals"]] = row3["n"]
     orbital_to_l[row3["Orbitals"]] = row3["l"]
 
-def V_elec(r, n_num, l_num):
-    return (1 / 3) * (r ** 2) * R(n_num, l_num, r)
+def V_elec(n_num, l_num):
+    (1 / 3) * (r ** 2) * R(n_num, l_num, r)
+    result = integrate.quad(lambda r: (1 / 3) * (r ** 2) * R(n_num, l_num, r) ** 2, 0, 1000)
+    return result
 
 # Initialize lists to store results and errors
 results = []
@@ -188,11 +190,4 @@ for atom in atom_dict:
     print(str(atom_dict[atom]) + " " + str(atom) + " " + str(atom_dict[atom]['n']))
     n_num = atom_dict[atom]['n']
     l_num = atom_dict[atom]['l']
-
-    # Perform the numerical integration for each atom
-    result, error = integrate.quad(V_elec, 0, 1e10, args=(n_num, l_num))
-    results.append(result)
-    errors.append(error)
-
-# Now you have results and errors for each atom's integration
-# You can use the results and errors as needed in your code.
+    print(V_elec(n_num, l_num))
