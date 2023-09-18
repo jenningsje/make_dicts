@@ -64,6 +64,7 @@ Zeff_dict = {}
 V_nuc = []
 periodic_array = []
 orbital_array = []
+h_bar = 1.054571817 * 10 ** −34
 
 # split the sidechain probability table
 acids0 = lines0[0].split()
@@ -182,13 +183,15 @@ def V_elec(n_num, l_num):
     return result
 
 # Initialize lists to store results and errors
-results = []
-errors = []
+V_squard_dict = {}
 
 # Loop over each atom for integration
-for atom in atom_dict:
-    print(str(atom_dict[atom]) + " " + str(atom) + " " + str(atom_dict[atom]['n']))
-    n_num = atom_dict[atom]['n']
-    l_num = atom_dict[atom]['l']
-    print(type(V_elec(n_num, l_num)))
-    print(V_elec(n_num, l_num[1]))
+for atom1 in atom_dict:
+    n_num1 = atom_dict[atom1]['n']
+    l_num1 = atom_dict[atom1]['l']
+    V_elec1 = V_elec(n_num1, l_num1)[1]
+    for atom2 in atom_dict:
+        n_num2 = atom_dict[atom2]['n']
+        l_num2 = atom_dict[atom2]['l']
+        V_elec2 = V_elec(n_num2, l_num2)[1] 
+        V_squard_dict[atom1 + atom2] = V_elec1 * V_elec2
