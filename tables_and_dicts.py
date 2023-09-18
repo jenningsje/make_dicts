@@ -53,7 +53,7 @@ atom_list = atomic_radii['symbol'].tolist()
 
 # coloumb constant
 ke = 8.9875517873681764 * 10 ** 9
-e_elec = 1.60217663 * 10 * -19
+e_elec = 1.60217663 * pow(10, -19)
 A = []
 E = []
 Nuclei_V_dict = {}
@@ -64,7 +64,8 @@ Zeff_dict = {}
 V_nuc = []
 periodic_array = []
 orbital_array = []
-h_bar = 1.054571817 * 10 ** −34
+h_bar = 1.054571817 * pow(10, -34)
+e_mass = 9.1093837 *  pow(10, -31)
 
 # split the sidechain probability table
 acids0 = lines0[0].split()
@@ -178,12 +179,17 @@ for index3, row3 in energies.iterrows():
     orbital_to_l[row3["Orbitals"]] = row3["l"]
 
 def V_elec(n_num, l_num):
-    (1 / 3) * (r ** 2) * R(n_num, l_num, r)
     result = integrate.quad(lambda r: (4 / (3 * .529 ** 3)) * (r ** 2) * R(n_num, l_num, r) ** 2, 0, 1000)
     return result
 
+K_con = (h_bar / (2 * 9.1093837 * (10 ** -31))/ e_mass) 
+
+def K_elec(n_num, l_num):
+    result = integrate.quad(lambda r: derivative(derivative(R(_num, l_num, r), r, dr=0.001), r, dr=0.001))
+
 # Initialize lists to store results and errors
-V_squard_dict = {}
+V_elec_sqrd_dict = {}
+K_elec_dict = {}
 
 # Loop over each atom for integration
 for atom1 in atom_dict:
@@ -194,4 +200,6 @@ for atom1 in atom_dict:
         n_num2 = atom_dict[atom2]['n']
         l_num2 = atom_dict[atom2]['l']
         V_elec2 = V_elec(n_num2, l_num2)[1] 
-        V_squard_dict[atom1 + atom2] = V_elec1 * V_elec2
+        V_elec_sqrd_dict[atom1 + atom2] = V_elec1 * V_elec2
+        K_elec = K_elec(n_num1, l_num1) + K_elec(n_num2, l_num2)
+        K_elec_dict[atom1 + atom2] = K_elec
