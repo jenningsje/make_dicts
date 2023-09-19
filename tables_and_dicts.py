@@ -6,6 +6,7 @@ from nucleiterms.current.bifold.matematik import mesh
 from nucleiterms.current.bifold.simpson.simpson import *
 from scipy import integrate
 from scipy.special import genlaguerre
+import json
 
 # import text files
 
@@ -145,7 +146,9 @@ q = mesh(500000, 300000, 5000)
 e_lab = 141.7 # collission energy which is zero
 V_nuc_dict = {}
 V_nuc_df = pd.DataFrame({'atom pair': [], 'energy': [], 'min dist': [], 'max dist': []})
+V_nuc = np.empty(shape=(m, m), dtype='object')
 
+"""
 # create nucle-nuclei energy dictionary
 for i in range(m):
     # retrieve data from nuclei-nuclei repulsion for nuclei i
@@ -169,10 +172,15 @@ for i in range(m):
             V_nuc = 0
 
         # create dictionary containing databases corresponding to each nuclei-nuclei pair
-        V_nuc_dict[atomic_radii["symbol"].iloc[i] + atomic_radii["symbol"].iloc[j]] = V_nuc
+        V_nuc_dict[atomic_radii["symbol"].iloc[i] + atomic_radii["symbol"].iloc[j]] = V_nu
+
+print(V_nuc_dict)
+
+"""
 
 orbital_to_n = {}
 orbital_to_l = {}
+
 
 for index3, row3 in energies.iterrows():
     orbital_to_n[row3["Orbitals"]] = row3["n"]
@@ -213,10 +221,8 @@ for atom1 in atom_dict:
         K_elec_dict[atom1 + atom2] = K_elec
 
 # Print V_elec_sqrd_dict and K_elec_dict
-print(V_elec_sqrd_dict)
-print(K_elec_dict)
+V_elec_sqrd_df = pd.DataFrame.from_dict(V_elec_sqrd_dict, orient='index', columns=['Value'])
+K_elec_df = pd.DataFrame.from_dict(K_elec_dict, orient='index', columns=['Value'])
 
-
-
-
-
+V_elec_sqrd_df.to_csv()
+K_elec_df.to_csv()
